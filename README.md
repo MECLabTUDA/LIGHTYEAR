@@ -249,11 +249,9 @@ For LIGHTYEAR, the main paper configuration is:
 
 ```yaml
 method: LIGHTYEAR
-topology: peer-to-peer
+topology: P2P
 tau: 0.6
 gamma: 0.95
-ntk: final-layer
-selection: client-specific
 ```
 
 ---
