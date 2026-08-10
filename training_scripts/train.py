@@ -15,7 +15,7 @@ import argparse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Set the parameters for malfunctioning updates')
-    parser.add_argument('--malfs', type=str, nargs='+', default=[])
+    parser.add_argument('--malf', type=str, nargs='+', default=[])
     parser.add_argument('--scale' ,type=float, default=None)
     parser.add_argument('--prob', type=float, default=0.0)
     parser.add_argument('--clientid' ,type=int, default=0)

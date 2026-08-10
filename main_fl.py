@@ -13,10 +13,10 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--malclients', nargs='+', default=[],help='ids of malfunctioning clients')
-    parser.add_argument('--malfs', nargs='+', help='possible values: random, ana, sfa')
+    parser.add_argument('--malf', nargs='+', help='possible values: random, ana, sfa')
     parser.add_argument('--scale', type=float, default=None)
-    parser.add_argument('--prob', type=float, default=0.0)
-    parser.add_argument('--workdir', type=str, default=None)
+    parser.add_argument('--prob', type=float, default=1.0)
+    parser.add_argument('--workspace', type=str, default=None)
     parser.add_argument('--algo', type=str, default='FedAvg')
     parser.add_argument('--dataset', type=str)
     parser.add_argument('--clients', type=int, default=5)
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     for i in range(num_clients):
         
         if str(i+1) in args.malclients:
-            arg_str  = f"--malfs {' '.join(args.malfs)} --prob {args.prob} --clientid {i} --dataset {args.dataset} --trainer {args.trainer}"
+            arg_str  = f"--malf {' '.join(args.malf)} --prob {args.prob} --clientid {i} --dataset {args.dataset} --trainer {args.trainer}"
             if args.scale is not None:
                 arg_str += f" --scale {args.scale}"
             executor = ScriptRunner(script=train_script, script_args=arg_str)
@@ -66,4 +66,4 @@ if __name__ == '__main__':
         job.to(executor, f"client-{i+1}")
 
     #run the job
-    job.simulator_run(os.path.join(f"jobs/{args.dataset}/fl/", args.workdir), gpu=gpu_list)
+    job.simulator_run(os.path.join(f"jobs/{args.dataset}/fl/", args.workspace), gpu=gpu_list)
