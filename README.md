@@ -1,13 +1,12 @@
 # LIGHTYEAR: NTK-Guided Personalized Aggregation for Robust Federated Learning
 
-Official implementation for the paper:
+Official implementation of our BMVC 2026 paper:
 
 > **Beyond Parameter Space: NTK-Guided Personalized Aggregation for Robust Federated Learning**  
-> BMVC 2026 Submission #639
 
 **LIGHTYEAR** stands for **Local Inference Guided Aggregation for Heterogeneous Training Environments to Yield Enhancement Through Agreement and Regularization**.
 
-LIGHTYEAR is a decentralized peer-to-peer (P2P) federated learning framework for robust and personalized aggregation under heterogeneous data distributions and unreliable clients. Instead of deciding which client updates to aggregate using parameter-space distances, LIGHTYEAR evaluates neighboring models in **function space** using a Neural Tangent Kernel (NTK)-based agreement score computed on each client's private validation data.
+LIGHTYEAR is a decentralized peer-to-peer (P2P) federated learning framework for robust and personalized aggregation under heterogeneous data distributions and malfunctioning clients. Instead of deciding which client updates to aggregate using parameter-space distances, LIGHTYEAR evaluates neighboring models in **function space** using a Neural Tangent Kernel (NTK)-based agreement score computed on each client's private validation data.
 
 ---
 
@@ -28,19 +27,35 @@ The result is a personalized aggregation set for every client, designed to rejec
 
 ---
 
+## Repository Structure
+
+```text
+LIGHTYEAR/
+├── datasets/          # Dataset loading 
+├── networks/          # Model definitions
+├── training/          # Local training
+├── training/          # Local optimization 
+├── aggregation/       # FL aggregation methods
+├── executors/         # P2P aggregation methods
+├── configs/           # Experiment entry configurations
+├── scripts/           # Convenience scripts
+├── requirements.txt
+└── README.md
+```
+
 ## Method
 
 ### Function-space agreement
 
-For a client model with parameters \(\theta\), LIGHTYEAR computes the Jacobian of the network output with respect to the parameters of the final layer. The resulting empirical final-layer Neural Tangent Kernel captures local predictive sensitivities on the client's validation samples.
+For a client model with parameters ($\theta$), LIGHTYEAR computes the Jacobian of the network output with respect to the parameters of the final layer. The resulting empirical final-layer Neural Tangent Kernel captures local predictive sensitivities on the client's validation samples.
 
-The kernel matrix is centered and Frobenius-normalized. Agreement between a local model \(\theta_i\) and a neighboring model \(\theta_j\) is then measured using normalized kernel alignment:
+The kernel matrix is centered and Frobenius-normalized. Agreement between a local model ($\theta_i$) and a neighboring model ($theta_j$) is then measured using normalized kernel alignment:
 
-\[
+$$
 A(\theta_i, \theta_j; V_i)
 = \langle \tilde{K}_{\theta_i}(V_i),
           \tilde{K}_{\theta_j}(V_i) \rangle_F.
-\]
+$$
 
 This lets each client compare models based on their behavior on the local target domain rather than only on their parameter values.
 
@@ -48,10 +63,10 @@ This lets each client compare models based on their behavior on the local target
 
 A neighboring update is selected when its agreement score exceeds a threshold \(\tau\):
 
-\[
+$$
 S_i = \{\theta_j \in \mathcal{N}(i) \mid
 A(\theta_i, \theta_j; V_i) \geq \tau\}.
-\]
+$$
 
 The paper uses:
 
@@ -97,18 +112,18 @@ LIGHTYEAR is evaluated against three types of malfunctioning client updates.
 
 A client corrupts the transmitted model by adding Gaussian noise to its parameters:
 
-\[
+$$
 \tilde{\theta} = \theta + \epsilon,
 \qquad \epsilon \sim \mathcal{N}(0, \sigma^2 I).
-\]
+$$
 
 ### Sign-Flipping Attack (SFA)
 
 A client reverses the model update direction by multiplying the transmitted parameters by a negative factor:
 
-\[
+$$
 \tilde{\theta} = -\alpha\theta, \qquad \alpha > 0.
-\]
+$$
 
 ### Random model update
 
@@ -146,7 +161,7 @@ Each method is evaluated separately under:
 - Sign-Flipping Attack (SFA)
 - Random model updates
 
-The number of malfunctioning clients is increased from one client up to \(n-1\) clients.
+The number of malfunctioning clients is increased from one client up to ($n-1$) clients.
 
 ### 2. Increasing numbers of malfunctioning clients
 
@@ -188,185 +203,32 @@ Scores are evaluated on the clients' local test data and aggregated across clien
 
 ---
 
-## Data Preparation
-
-> **TODO:** Add the download links, licenses, preprocessing steps, and expected directory structure for each dataset.
-
-```bash
-# FEMNIST
-# python <DATA_PREPARATION_SCRIPT> --dataset femnist --output <DATA_ROOT>
-
-# Camelyon17-WILDS
-# python <DATA_PREPARATION_SCRIPT> --dataset camelyon17 --output <DATA_ROOT>
-
-# ISIC19
-# python <DATA_PREPARATION_SCRIPT> --dataset isic19 --output <DATA_ROOT>
-
-# Ultrasound
-# python <DATA_PREPARATION_SCRIPT> --dataset ultrasound --output <DATA_ROOT>
-
-# ChestXray
-# python <DATA_PREPARATION_SCRIPT> --dataset xray --output <DATA_ROOT>
-```
-
----
-
 ## Running the Experiments
 
 The following commands are intentionally provided as **placeholders**. Replace the script names and arguments with the corresponding commands in this repository.
 
-### LIGHTYEAR
+### LIGHTYEAR (P2P)
 
 ```bash
-# FEMNIST
-python <RUN_SCRIPT>.py --dataset femnist --method lightyear --tau 0.6 --gamma 0.95 <OTHER_ARGS>
+python3 main_fl.py --gpu 1 --workdir LIGHTYEAR/mix_2 --dataset camelyon17 --clients 5 --malf sfa ana random --malclients 1 2 --algo LIGHTYEAR
 
-# Camelyon17
-python <RUN_SCRIPT>.py --dataset camelyon17 --method lightyear --tau 0.6 --gamma 0.95 <OTHER_ARGS>
-
-# ISIC19
-python <RUN_SCRIPT>.py --dataset isic19 --method lightyear --tau 0.6 --gamma 0.95 <OTHER_ARGS>
-
-# Ultrasound
-python <RUN_SCRIPT>.py --dataset ultrasound --method lightyear --tau 0.6 --gamma 0.95 <OTHER_ARGS>
-
-# ChestXray
-python <RUN_SCRIPT>.py --dataset xray --method lightyear --tau 0.6 --gamma 0.95 <OTHER_ARGS>
 ```
 
-### Individual malfunction experiments
+### Centralized FL
 
 ```bash
-# Additive-Noise Attack (ANA)
-python <RUN_SCRIPT>.py --dataset <DATASET> --method lightyear --malfunction ANA <OTHER_ARGS>
+python3 main_fl.py --gpu 1 --workdir fedavg_run1 --dataset camelyon17 --clients 5 --malf sfa ana random --malclients 1 2 --algo FedAvg
 
-# Sign-Flipping Attack (SFA)
-python <RUN_SCRIPT>.py --dataset <DATASET> --method lightyear --malfunction SFA <OTHER_ARGS>
-
-# Random model update
-python <RUN_SCRIPT>.py --dataset <DATASET> --method lightyear --malfunction random <OTHER_ARGS>
 ```
 
-### Increasing number of malfunctioning clients
-
-```bash
-# Run experiments with 1, ..., n-1 malfunctioning clients
-python <RUN_SCRIPT>.py --dataset <DATASET> --method lightyear \
-    --malfunction <ANA|SFA|random> \
-    --num-malfunctioning-clients <N> \
-    <OTHER_ARGS>
-```
-
-### Dynamic malfunction experiment
-
-```bash
-# Malfunctioning clients randomly switch between ANA, SFA, and random updates
-python <RUN_SCRIPT>.py --dataset <DATASET> --method lightyear \
-    --malfunction dynamic \
-    <OTHER_ARGS>
-```
-
-### Baseline experiments
-
-```bash
-# FedAvg
-python <RUN_SCRIPT>.py --dataset <DATASET> --method fedavg <OTHER_ARGS>
-
-# AFA
-python <RUN_SCRIPT>.py --dataset <DATASET> --method afa <OTHER_ARGS>
-
-# ASMR
-python <RUN_SCRIPT>.py --dataset <DATASET> --method asmr <OTHER_ARGS>
-
-# CFL
-python <RUN_SCRIPT>.py --dataset <DATASET> --method cfl <OTHER_ARGS>
-
-# Ditto
-python <RUN_SCRIPT>.py --dataset <DATASET> --method ditto <OTHER_ARGS>
-
-# Krum
-python <RUN_SCRIPT>.py --dataset <DATASET> --method krum <OTHER_ARGS>
-
-# FedProx
-python <RUN_SCRIPT>.py --dataset <DATASET> --method fedprox <OTHER_ARGS>
-
-# BALANCE
-python <RUN_SCRIPT>.py --dataset <DATASET> --method balance <OTHER_ARGS>
-
-# SCCLIP
-python <RUN_SCRIPT>.py --dataset <DATASET> --method scclip <OTHER_ARGS>
-```
 
 ---
 
 ## Evaluation
 
-> **TODO:** Replace with the repository's evaluation entry point.
-
 ```bash
 # Evaluate a trained model/checkpoint
-python <EVAL_SCRIPT>.py \
-    --dataset <DATASET> \
-    --method <METHOD> \
-    --checkpoint <CHECKPOINT_PATH> \
-    <OTHER_ARGS>
-```
-
----
-
-## Ablation Studies
-
-The paper studies both the aggregation regulation parameter \(\gamma\) and the agreement threshold \(\tau\).
-
-### Regulation parameter \(\gamma\)
-
-```bash
-# Example placeholder for a gamma sweep
-python <ABLATION_SCRIPT>.py --ablation gamma \
-    --dataset <DATASET> \
-    --values <GAMMA_VALUES> \
-    <OTHER_ARGS>
-```
-
-The experiments motivate the default value:
-
-```text
-gamma = 0.95
-```
-
-### Agreement threshold \(\tau\)
-
-```bash
-# Example placeholder for an agreement-threshold sweep
-python <ABLATION_SCRIPT>.py --ablation tau \
-    --dataset <DATASET> \
-    --values <TAU_VALUES> \
-    <OTHER_ARGS>
-```
-
-The main experiments use:
-
-```text
-tau = 0.6
-```
-
----
-
-## Expected Repository Structure
-
-> **TODO:** Update this section to match the actual repository. The structure below is only a template.
-
-```text
-LIGHTYEAR/
-├── datasets/          # Dataset loading and preprocessing
-├── networks/          # Model definitions
-├── training/          # Local training and evaluation utilities
-├── aggregation/       # FL/P2P aggregation methods
-├── lightyear/         # NTK agreement and personalized update selection
-├── experiments/       # Experiment entry points/configurations
-├── scripts/           # Convenience scripts
-├── requirements.txt
-└── README.md
+python3 eval.py --algo LIGHTYEAR --topology p2p --dataset camelyon17 --malfunction mix >> results/LIGHTYEAR_mix.txt
 ```
 
 ---
@@ -381,17 +243,15 @@ A complete reproduction should cover the following combinations:
 4. increasing numbers of malfunctioning clients;
 5. dynamically changing malfunctions;
 6. centralized FL, standard P2P FL, and LIGHTYEAR topology comparisons; and
-7. the \(\gamma\) and agreement-score analyses reported in the ablation study.
+7. the ($\gamma$) and agreement-score analyses reported in the ablation study.
 
 For LIGHTYEAR, the main paper configuration is:
 
 ```yaml
 method: LIGHTYEAR
-topology: peer-to-peer
+topology: P2P
 tau: 0.6
 gamma: 0.95
-ntk: final-layer
-selection: client-specific
 ```
 
 ---
