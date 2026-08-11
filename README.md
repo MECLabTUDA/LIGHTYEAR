@@ -191,10 +191,9 @@ Scores are evaluated on the clients' local test data and aggregated across clien
 ```bash
 # Clone the repository
 # git clone <REPOSITORY_URL>
-# cd <REPOSITORY_NAME>
-
+# cd LIGHTYEAR
 # Create an environment
-# conda create -n lightyear python=<PYTHON_VERSION>
+# conda create -n lightyear python=3.10.20
 # conda activate lightyear
 
 # Install dependencies
