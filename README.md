@@ -186,11 +186,9 @@ Scores are evaluated on the clients' local test data and aggregated across clien
 
 ## Installation
 
-> **TODO:** Replace the commands below with the actual environment setup for this repository.
-
 ```bash
 # Clone the repository
-# git clone <REPOSITORY_URL>
+# git clone https://github.com/MECLabTUDA/LIGHTYEAR.git
 # cd LIGHTYEAR
 # Create an environment
 # conda create -n lightyear python=3.10.20
