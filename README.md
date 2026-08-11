@@ -272,8 +272,10 @@ If you use this code in your research, please cite the paper.
 
 ## License
 
-> **TODO:** Add the repository license and any dataset-specific licensing notes.
+The source code in this repository is released under the MIT License.
 
+The associated paper and its contents are licensed under the
+Creative Commons Attribution 4.0 International (CC BY 4.0) license.
 ---
 
 ## Acknowledgements
