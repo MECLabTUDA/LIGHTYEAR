@@ -267,17 +267,3 @@ If you use this code in your research, please cite the paper.
   year      = {2026}
 }
 ```
-
----
-
-## License
-
-The source code in this repository is released under the MIT License.
-
-The associated paper and its contents are licensed under the
-Creative Commons Attribution 4.0 International (CC BY 4.0) license.
----
-
-## Acknowledgements
-
-This repository accompanies the LIGHTYEAR paper and its experiments on robust and personalized federated learning under heterogeneous and malfunctioning client populations.
