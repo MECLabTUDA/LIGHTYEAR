@@ -207,7 +207,7 @@ The following commands are intentionally provided as **placeholders**. Replace t
 ### LIGHTYEAR (P2P)
 
 ```bash
-python3 main_fl.py --gpu 1 --workdir LIGHTYEAR/mix_2 --dataset camelyon17 --clients 5 --malf sfa ana random --malclients 1 2 --algo LIGHTYEAR
+python3 main.py --gpu 1 --workdir LIGHTYEAR/mix_2 --dataset camelyon17 --clients 5 --malf sfa ana random --malclients 1 2 --algo LIGHTYEAR
 
 ```
 
