@@ -260,10 +260,13 @@ If you use this code in your research, please cite the paper.
 > **TODO:** Replace this placeholder with the final BibTeX entry once publication metadata is available.
 
 ```bibtex
-@inproceedings{lightyear2026,
-  title     = {Beyond Parameter Space: NTK-Guided Personalized Aggregation for Robust Federated Learning},
-  author    = {<AUTHORS>},
-  booktitle = {British Machine Vision Conference (BMVC)},
-  year      = {2026}
+@misc{konstantin2026parameterspacentkguidedpersonalized,
+      title={Beyond Parameter Space: NTK-Guided Personalized Aggregation for Robust Federated Learning}, 
+      author={Mirko Konstantin and Stefan Zachow and Anirban Mukhopadhyay},
+      year={2026},
+      eprint={2608.12108},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2608.12108}, 
 }
 ```
