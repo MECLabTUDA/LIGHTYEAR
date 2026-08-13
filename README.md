@@ -257,8 +257,6 @@ gamma: 0.95
 
 If you use this code in your research, please cite the paper.
 
-> **TODO:** Replace this placeholder with the final BibTeX entry once publication metadata is available.
-
 ```bibtex
 @misc{konstantin2026parameterspacentkguidedpersonalized,
       title={Beyond Parameter Space: NTK-Guided Personalized Aggregation for Robust Federated Learning}, 
